@@ -6,6 +6,6 @@ int main()
     std::cout <<a <<std::endl;
     
     int b = 5;
-    std::cout <<b <<std::endl;
+    std::cout << b <<std::endl;
   
 }
