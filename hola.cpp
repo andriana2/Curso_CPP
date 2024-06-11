@@ -7,5 +7,5 @@ int main()
     
     int b = 5;
     std::cout << b <<std::endl;
-  
+    return (0);
 }
