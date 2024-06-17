@@ -4,56 +4,88 @@
 
 using namespace std;
 
-vector <string> soccer(string str)
+vector <string> split(string const &str, char separador)
 {
     vector <string> resultado;
-    int num_abierto{0};
-    bool flag_abierto{0};
-    int num_cerrado{0};
-    int abierto_inicio;
-    for (int i = 0; i < str.size(); i++)
+    string temp{""};
+    bool flag_palabra{0};
+    for (int i{0}; i < str.size(); i++)
     {
-        if (str.at(i) == '(')
+        if (str.at(i) == separador)
         {
-            flag_abierto = 1;
-            num_abierto++;
-            if (num_abierto == 1)
+            if (flag_palabra == 1)
             {
-                abierto_inicio = i;
+                resultado.push_back(temp);
+                temp = "";
             }
+            flag_palabra = 1;
         }
-        if (str.at(i) == ')')
+        else if (flag_palabra = 1)
         {
-            if(flag_abierto == 1 && num_abierto == 1)
-            {
-                num_abierto = 0;
-                flag_abierto = 0;
-                cout << str.substr(abierto_inicio + 1, i - abierto_inicio - 1)<< endl;
-                resultado.push_back(str.substr(abierto_inicio + 1, i - abierto_inicio - 1));
-            }
-            num_cerrado++;
-            if ((num_abierto - num_cerrado) == 0)
-            {
-                num_abierto = 0;
-                num_cerrado = 0;
-                cout << str.substr(abierto_inicio + 1, i - abierto_inicio - 1)<< endl;
-                resultado.push_back(str.substr(abierto_inicio + 1, i - abierto_inicio - 1));
-
-            }
+            temp = temp + str.at(i);
         }
     }
+    if (temp != "")
+        resultado.push_back(temp);
     return (resultado);
-    
 }
 
 int main()
 {
-    //_________ej2__________
-    vector <string> cadena(soccer("((hola)(que))(tal)(estas)"));
-        
-
+    split ("hola que tal estas", ' ');
     return (0);
 }
+
+// vector <string> soccer(string str)
+// {
+//     vector <string> resultado;
+//     int num_abierto{0};
+//     bool flag_abierto{0};
+//     int num_cerrado{0};
+//     int abierto_inicio;
+//     for (int i = 0; i < str.size(); i++)
+//     {
+//         if (str.at(i) == '(')
+//         {
+//             flag_abierto = 1;
+//             num_abierto++;
+//             if (num_abierto == 1)
+//             {
+//                 abierto_inicio = i;
+//             }
+//         }
+//         if (str.at(i) == ')')
+//         {
+//             if(flag_abierto == 1 && num_abierto == 1)
+//             {
+//                 num_abierto = 0;
+//                 flag_abierto = 0;
+//                 cout << str.substr(abierto_inicio + 1, i - abierto_inicio - 1)<< endl;
+//                 resultado.push_back(str.substr(abierto_inicio + 1, i - abierto_inicio - 1));
+//             }
+//             num_cerrado++;
+//             if ((num_abierto - num_cerrado) == 0)
+//             {
+//                 num_abierto = 0;
+//                 num_cerrado = 0;
+//                 cout << str.substr(abierto_inicio + 1, i - abierto_inicio - 1)<< endl;
+//                 resultado.push_back(str.substr(abierto_inicio + 1, i - abierto_inicio - 1));
+
+//             }
+//         }
+//     }
+//     return (resultado);
+    
+// }
+
+// int main()
+// {
+//     //_________ej2__________
+//     vector <string> cadena(soccer("((hola)(que))(tal)(estas)"));
+        
+
+//     return (0);
+// }
 
 
 
