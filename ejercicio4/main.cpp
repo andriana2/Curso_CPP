@@ -1,7 +1,25 @@
 #include "Calculadora.h"
 
+bool estoy_dentro(vector<shared_ptr<Persona>> &v, shared_ptr<Persona> &person)
+{
+    for (const auto &vector_: v)
+    {
+        if (vector_ == person)
+            return (true);
+    }
+    return (false);
+}
+
 int main()
 {
+    vector<shared_ptr<Persona>> personas;
+    shared_ptr<Persona> p1 = make_shared<Persona>(Persona{"Alice", 17, false});
+    shared_ptr<Persona> p2 = make_shared<Persona>(Persona{"Alice", 17, false});
+    personas.push_back(p2);
+    personas.push_back(make_shared<Persona>(Persona{"Alice", 17, false}));
+    personas.push_back(make_shared<Persona>(Persona{"Alice", 19, false}));
+    cout << estoy_dentro(personas, p1) << endl;
+    cout << estoy_dentro(personas, p2) << endl;
 
 }
 

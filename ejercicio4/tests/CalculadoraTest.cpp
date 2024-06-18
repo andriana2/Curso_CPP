@@ -21,6 +21,26 @@ TEST(CalculadoraTest, SumaValida2) {
     EXPECT_EQ(*pResultado, *pExpected);
 }
 
+TEST(CalculadoraTest, TRUE_TEST)
+{
+    vector<shared_ptr<Persona>> personas;
+    shared_ptr<Persona> p1 = make_shared<Persona>(Persona{"Alice", 17, false});
+    shared_ptr<Persona> p2 = make_shared<Persona>(Persona{"Alice", 17, false});
+    personas.push_back(p2);
+
+    EXPECT_EQ(estoy_dentro(personas, p2), true);
+}
+
+TEST(CalculadoraTest, FALSE_TEST)
+{
+    vector<shared_ptr<Persona>> personas;
+    shared_ptr<Persona> p1 = make_shared<Persona>(Persona{"Alice", 17, false});
+    shared_ptr<Persona> p2 = make_shared<Persona>(Persona{"Alice", 17, false});
+    personas.push_back(p2);
+
+    EXPECT_EQ(estoy_dentro(personas, p1), false);
+}
+
 // TEST(CalculadoraTest, NoIniciaConParentesis) {
 //     const std::string input = "hola(que)(tal)";
 //     EXPECT_THROW(GestionParentesis(input), std::invalid_argument);

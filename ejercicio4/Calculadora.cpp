@@ -21,3 +21,13 @@ vector<shared_ptr<Persona>> mayor_edad(vector<shared_ptr<Persona>> personas)
     }
     return (pResultado);
 }
+
+bool estoy_dentro(vector<shared_ptr<Persona>> &v, shared_ptr<Persona> &person)
+{
+    for (const auto &vector_: v)
+    {
+        if (vector_ == person)
+            return (true);
+    }
+    return (false);
+}

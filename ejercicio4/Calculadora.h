@@ -18,5 +18,6 @@ struct Persona
 };
 
 vector<shared_ptr<Persona>> mayor_edad(vector<shared_ptr<Persona>> personas);
+bool estoy_dentro(vector<shared_ptr<Persona>> &v, shared_ptr<Persona> &person);
 
 #endif
