@@ -1,3 +1,11 @@
+//nullptr es el null de una ptr
+//funciones lambda 
+//para que funcionan [] en las funciones lambda
+//vp nuevoVector; // esta fuera de los {} de las diferentes funciones
+// forEach(miVector, [](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// no reconoce nada que no este entre los corchetes
+// forEach(miVector, [&](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// paso por referncia 
+// forEach(miVector, [=](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// paso por referencia constante
+
 #include <functional>
 #include <iostream>
 #include <memory> // para los punteros inteligentes
@@ -20,6 +28,17 @@ typedef function<bool(shared_ptr<Persona>)> bpersonalambda;
 
 
 
+shared_ptr<Persona> find_(vp const &p, bpersonalambda const & f)
+{
+    for(auto const &elem : p)
+    {
+        if (f(elem))
+        {
+            return (elem);
+        }
+    }
+    return nullptr;
+}
 void forEach(vp const &p, personalambda const &f)
 {
     for(auto const &elem : p)
@@ -97,6 +116,16 @@ int main()
         cout << f->name << " " <<f->age <<" " << endl;
     cout << endl;
     cout << endl;
+    shared_ptr<Persona> puntero= find_(miVector, [](shared_ptr<Persona> a){ return(a->age < 18); });
+    cout << puntero->name << " " <<puntero->age <<" " << endl;
+    cout << endl;
+    cout << endl;
+
+    //vp nuevoVector;
+    // forEach(miVector, [](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// no reconoce nada que no este entre los corchetes
+    // forEach(miVector, [&](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// paso por referncia 
+    // forEach(miVector, [=](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// paso por referencia constante
+
     return 0;
 }
 
