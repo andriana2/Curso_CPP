@@ -9,7 +9,6 @@ struct Persona
 {
     string name;
     int age;
-    bool underAge;
 };
 typedef vector<int> vi;
 typedef vector<shared_ptr<Persona>> vp;
@@ -30,7 +29,7 @@ void forEach(vp const &p, personalambda const &f)
 }
 bool some(vp const &p, bpersonalambda const &f)
 {
-    for(auto elem : p)
+    for(auto const &elem : p)
     {
         if (f(elem))
             return true;
@@ -39,7 +38,7 @@ bool some(vp const &p, bpersonalambda const &f)
 }
 bool every(vp const &p, bpersonalambda const &f)
 {
-    for(auto elem : p)
+    for(auto const &elem : p)
     {
         if (f(elem))
             return false;
@@ -49,10 +48,12 @@ bool every(vp const &p, bpersonalambda const &f)
 vp filter(vp const &p, bpersonalambda const &f)
 {
     vp resultado;
-    for(auto elem: p)
+    for(auto const &elem: p)
     {
         if (f(elem))
+        {
             resultado.push_back(elem);
+        }
     }
     return resultado;
 }
@@ -60,17 +61,20 @@ vp filter(vp const &p, bpersonalambda const &f)
 vp trasform(vp const &p,function<shared_ptr<Persona>(shared_ptr<Persona>)> const &f)
 {
     vp resultado;
-    for(auto elem: p)
-        resultado.push_back(f(elem));
+    for(auto const &elem: p)
+    {
+        shared_ptr<Persona> copia = make_shared<Persona>(*elem);
+        resultado.push_back(f(copia));
+    }
     return resultado;
 }
 
 int main()
 {
-    shared_ptr<Persona> p1 = make_shared<Persona>(Persona{"A", 20, false});
-    shared_ptr<Persona> p2 = make_shared<Persona>(Persona{"Ae", 16, false});
-    shared_ptr<Persona> p3 = make_shared<Persona>(Persona{"Ale", 34, false});
-    shared_ptr<Persona> p4 = make_shared<Persona>(Persona{"Alie", 17, false});
+    shared_ptr<Persona> p1 = make_shared<Persona>(Persona{"A", 20});
+    shared_ptr<Persona> p2 = make_shared<Persona>(Persona{"Ae", 16});
+    shared_ptr<Persona> p3 = make_shared<Persona>(Persona{"Ale", 34});
+    shared_ptr<Persona> p4 = make_shared<Persona>(Persona{"Alie", 17});
     vp miVector{p1,p2,p3,p4};
     forEach(miVector, [](shared_ptr<Persona> p){cout << p->name << " ";});
     cout << endl;
@@ -90,7 +94,7 @@ int main()
     cout << "FELIZ CUMPLEAÑOS A TODOS-> Cumplis:"<<endl;
     vp vp2 = trasform(miVector, [](shared_ptr<Persona> a){ a->age++; return (a); });
     for (auto const &f : vp2)
-        cout << f->name << "     " <<f->age << endl;
+        cout << f->name << " " <<f->age <<" " << endl;
     cout << endl;
     cout << endl;
     return 0;
@@ -99,7 +103,7 @@ int main()
 
 /*void forEach(vi const &v, flambda const &f)
 {
-    for(auto elem : v)
+    for(auto const &elem : v)
     {
         f(elem);
     }
@@ -108,7 +112,7 @@ int main()
 
 bool some(vi const &v, blambda const &f)
 {
-    for(auto elem : v)
+    for(auto const &elem : v)
     {
         if (f(elem) == true)
             return true;
@@ -117,7 +121,7 @@ bool some(vi const &v, blambda const &f)
 }
 bool every(vi const &v, blambda const &f)
 {
-    for(auto elem : v)
+    for(auto const &elem : v)
     {
         if (!f(elem))
             return false;
