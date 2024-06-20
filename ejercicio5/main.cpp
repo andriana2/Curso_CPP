@@ -5,6 +5,8 @@
 // forEach(miVector, [](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// no reconoce nada que no este entre los corchetes
 // forEach(miVector, [&](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// paso por referncia 
 // forEach(miVector, [=](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// paso por referencia constante
+//un ejemplo [&nuevo,b] //nuevo por referencia y b por referencia constante
+
 
 #include <functional>
 #include <iostream>
@@ -21,14 +23,47 @@ struct Persona
 typedef vector<int> vi;
 typedef vector<shared_ptr<Persona>> vp;
 
-// typedef function<void(int)> flambda;
+typedef function<void(int)> flambda;
 // typedef function<bool(int)> blambda;
 typedef function<void(shared_ptr<Persona>)> personalambda;
 typedef function<bool(shared_ptr<Persona>)> bpersonalambda;
 
 
+void forEach(vi const &v, flambda const &f)
+{
+    for(auto const &elem : v)
+    {
+        f(elem);
+    }
+}
 
-shared_ptr<Persona> find_(vp const &p, bpersonalambda const & f)
+int main ()
+{
+    int f1 {1};
+    int f2 {1};
+    int f3 {2};
+    vector <int> resultado;
+    cout << "Indice fibonacci ";
+    int indice;
+    cin >>indice;
+    resultado.push_back(f1);
+    for (int i {0}; i < indice - 1; i++)
+    {
+        f1 = f2;
+        f2 = f3;
+        f3 = f1 + f2;
+        resultado.push_back(f1);
+    }
+    int suma{0};
+    forEach(resultado, [](int a){ cout << a << " ";});
+    cout << endl;
+    forEach(resultado, [&suma](int a){suma = a + suma; cout << suma << " ";});
+    cout << endl;
+
+
+}
+
+/*shared_ptr<Persona> find_(vp const &p, bpersonalambda const & f)
 {
     for(auto const &elem : p)
     {
@@ -127,18 +162,10 @@ int main()
     // forEach(miVector, [=](shared_ptr<Persona> p) {nuevoVector.push_back(p);});// paso por referencia constante
 
     return 0;
-}
+}*/
 
 
-/*void forEach(vi const &v, flambda const &f)
-{
-    for(auto const &elem : v)
-    {
-        f(elem);
-    }
-}
-
-
+/*
 bool some(vi const &v, blambda const &f)
 {
     for(auto const &elem : v)
