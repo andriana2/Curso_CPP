@@ -42,14 +42,22 @@ P_Node push(P_Node first, int telefono, string nombre)
     return nNode;
 }
 
-void imprimir_elems(P_Node first)
+void imprimir_elems(P_Node first, int filtro = 0)
 {
     P_Node temp = first;
     int i{1};
     while(temp)
     {
-        cout << i << ". " << temp->id << endl;
-        temp = temp->next;
+        if (filtro == 0)
+        {
+            cout << i << ". " << temp->id << endl;
+            temp = temp->next;
+        }
+        else 
+        {
+            cout << i << ". " << temp->nombre << endl;
+            temp = temp->next;
+        }
         i++;
     }
 }
@@ -97,6 +105,40 @@ void search(P_Node &first, string nombre)
         temp = temp->next;
     }
 }
+
+void modificar(P_Node &first, int numero)
+{
+    int i{1};
+    P_Node temp{first};
+    int num;
+    while(i <= numero || temp == nullptr)
+    {
+        if (i == numero)
+        {
+            cout << "¿Que quieres modificar?"<< endl << "1. Nombre"<<endl << "2. Telefono"<< endl;
+            cin >> num;
+            if (num == 1)
+            {
+                string nombre;
+                cout << "nombre nuevo: ";
+                cin >> nombre;
+                temp->nombre = nombre;
+                break;
+            }
+            else if (num == 2)
+            {
+                int nume;
+                cout << "numero nuevo: ";
+                cin >> nume;
+                temp->numero = nume;
+                break;
+            }
+        }
+        temp = temp->next;
+        i++;
+    }
+
+}
 //borrar 
 //añadir 
 //buscar(nombre contiene esas letras en orden y imprimir)
@@ -111,12 +153,19 @@ int main(){
     P_Node start = make_shared<Node>(Node{666777888, "Ana", generateRandomID(), nullptr});
     while (true)
     {
-        cout <<"\n\n\n"<< "Que quieres hacer pon el numero a continuacion: " <<endl << "1. Borrar"<<endl << "2. Añadir"<<endl << "3. Buscar"<<endl << "4. Mostrar" <<endl << "-1. Para salir" <<endl;
+        cout <<"\n\n\n";
+        cout << "Que quieres hacer pon el numero a continuacion: " <<endl;
+        cout << "1 Borrar"<<endl; 
+        cout << "2 Añadir"<<endl; 
+        cout << "3 Buscar"<<endl; 
+        cout << "4 Mostrar" <<endl; 
+        cout << "5 Modificar" << endl;
+        cout << "-1 Para salir" <<endl;
         cin >> numero_agenda;
         cout << endl;
         if(numero_agenda == -1)
             break;
-        else if(numero_agenda < 0 || numero_agenda > 4)
+        else if(numero_agenda < 0 || numero_agenda > 5)
             cout << "Te has confundido con el numero";
         else if(numero_agenda == 1)
         {
@@ -145,6 +194,15 @@ int main(){
             cout << "nombre persona que buscas:"<< endl;
             cin >> nombre;
             search(start, nombre);
+
+        }
+        else if (numero_agenda == 5)
+        {
+            int numero;
+            imprimir_elems(start, 1);
+            cout << "Que numero de la lista quieres modificar"<<endl;
+            cin >> numero;
+            modificar(start, numero);
 
         }
 

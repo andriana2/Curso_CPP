@@ -4,7 +4,7 @@ project(Ejemplo)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(SOURCE agenda.cpp)
+set(SOURCE listas_dobles.cpp)
 
 add_executable(main ${SOURCE})
 
