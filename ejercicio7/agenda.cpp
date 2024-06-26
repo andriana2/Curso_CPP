@@ -1,11 +1,14 @@
-//listas enlazadas
+// listas enlazadas
 
-#include <memory>
 #include <iostream>
-#include <functional>
-#include <string>
+#include <sstream>
 #include <vector>
+#include <string>
+#include <stdexcept>
+#include <fstream>
+#include <array>
 #include <random>
+#include <memory>
 using namespace std;
 struct Node
 {
@@ -16,15 +19,16 @@ struct Node
 };
 typedef shared_ptr<Node> P_Node;
 
-
-string generateRandomID() {
-    const  string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+string generateRandomID()
+{
+    const string letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     string id;
     random_device rd;
     mt19937 generator(rd());
     uniform_int_distribution<> distribution(0, letters.size() - 1);
 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 5; ++i)
+    {
         id += letters[distribution(generator)];
     }
     return id;
@@ -33,11 +37,22 @@ string generateRandomID() {
 P_Node push(P_Node first, int telefono, string nombre)
 {
     P_Node temp = first;
-    while(temp->next)
+    while (temp->next)
     {
         temp = temp->next;
     }
     P_Node nNode = make_shared<Node>(Node{telefono, nombre, generateRandomID(), nullptr});
+    temp->next = nNode;
+    return nNode;
+}
+P_Node push_con_id(P_Node first, int telefono, string nombre, string id)
+{
+    P_Node temp = first;
+    while (temp->next)
+    {
+        temp = temp->next;
+    }
+    P_Node nNode = make_shared<Node>(Node{telefono, nombre, id, nullptr});
     temp->next = nNode;
     return nNode;
 }
@@ -46,14 +61,14 @@ void imprimir_elems(P_Node first, int filtro = 0)
 {
     P_Node temp = first;
     int i{1};
-    while(temp)
+    while (temp)
     {
         if (filtro == 0)
         {
             cout << i << ". " << temp->id << endl;
             temp = temp->next;
         }
-        else 
+        else
         {
             cout << i << ". " << temp->nombre << endl;
             temp = temp->next;
@@ -64,9 +79,11 @@ void imprimir_elems(P_Node first, int filtro = 0)
 void imprimir_elems_todos(P_Node first)
 {
     P_Node temp = first;
-    while(temp)
+    while (temp)
     {
-        cout << "Nombre " << temp->nombre << endl <<"Telefono "<< temp->numero<<endl << "ID " <<temp->id << endl;
+        cout << "Nombre " << temp->nombre << endl
+             << "Telefono " << temp->numero << endl
+             << "ID " << temp->id << endl;
         temp = temp->next;
     }
 }
@@ -78,7 +95,7 @@ void delete_node(P_Node &first, string eliminar)
     int flag{0};
     if (first->id == eliminar)
         first = first->next;
-    while(temp)
+    while (temp)
     {
         if (flag == 1)
         {
@@ -96,11 +113,13 @@ void delete_node(P_Node &first, string eliminar)
 void search(P_Node &first, string nombre)
 {
     P_Node temp = first;
-    while(temp)
+    while (temp)
     {
-        if(temp->nombre.find(nombre) != -1)
+        if (temp->nombre.find(nombre) != -1)
         {
-            cout << "Nombre " << temp->nombre << endl <<"Telefono "<< temp->numero<<endl << "ID " <<temp->id << endl;
+            cout << "Nombre " << temp->nombre << endl
+                 << "Telefono " << temp->numero << endl
+                 << "ID " << temp->id << endl;
         }
         temp = temp->next;
     }
@@ -111,11 +130,13 @@ void modificar(P_Node &first, int numero)
     int i{1};
     P_Node temp{first};
     int num;
-    while(i <= numero || temp == nullptr)
+    while (i <= numero || temp == nullptr)
     {
         if (i == numero)
         {
-            cout << "¿Que quieres modificar?"<< endl << "1. Nombre"<<endl << "2. Telefono"<< endl;
+            cout << "¿Que quieres modificar?" << endl
+                 << "1. Nombre" << endl
+                 << "2. Telefono" << endl;
             cin >> num;
             if (num == 1)
             {
@@ -137,40 +158,109 @@ void modificar(P_Node &first, int numero)
         temp = temp->next;
         i++;
     }
-
 }
-//borrar 
-//añadir 
-//buscar(nombre contiene esas letras en orden y imprimir)
-// y mostrar todos(nombre telefono uid)
+// borrar
+// añadir
+// buscar(nombre contiene esas letras en orden y imprimir)
+//  y mostrar todos(nombre telefono uid)
 
+ostream &operator<<(ostream &os, const P_Node &head)
+{
+    P_Node temp{head};
+    if (typeid(os) == typeid(ofstream))
+    {
+        while (temp)
+        {
+            os << temp->nombre << " " << temp->numero << " " << temp->id << endl;
+            temp = temp->next;
+        }
+    }
+    else
+    {
+        int i{0};
+        while (temp)
+        {
+            os << "Persona " << i + 1 << ":" << endl;
+            os << "Nombre: " << temp->nombre << "\nEdad: " << temp->numero << endl;
+            temp = temp->next;
+            i++;
+        }
+    }
+    return os;
+}
 
+istream& operator>>(istream& is, P_Node& head) {
+    string nombre;
+    int numero;
+    string id;
 
+    is >> nombre >> numero >> id;
+    if (!is.fail()) {
+        P_Node newNode = make_shared<Node>(Node{numero, nombre, id, nullptr});
+        if (!head) {
+            head = newNode;
+        } else {
+            P_Node temp = head;
+            while (temp->next) {
+                temp = temp->next;
+            }
+            temp->next = newNode;
+        }
+    }
+    return is;
+}
+P_Node leer() {
+    P_Node head = nullptr;
+    ifstream archivoLectura("contactos.txt");
+    if (!archivoLectura) {
+        cout << "Error al abrir para leer\n";
+        exit(EXIT_FAILURE);
+    }
+    while (!archivoLectura.eof()) {
+        archivoLectura >> head;
+    }
+    return head;
+}
+int guardar(const P_Node &head)
+{
+    ofstream archivo("contactos.txt");
+    if (!archivo)
+    {
+        cout << "Error al abrir para escribir\n";
+        return -1;
+    }
 
-int main(){
+    archivo << head << endl;
+
+    archivo.close();
+    return 0;
+}
+
+int main()
+{
     int numero_agenda{0};
     string id_main;
     P_Node start = make_shared<Node>(Node{666777888, "Ana", generateRandomID(), nullptr});
     while (true)
     {
-        cout <<"\n\n\n";
-        cout << "Que quieres hacer pon el numero a continuacion: " <<endl;
-        cout << "1 Borrar"<<endl; 
-        cout << "2 Añadir"<<endl; 
-        cout << "3 Buscar"<<endl; 
-        cout << "4 Mostrar" <<endl; 
+        cout << "\n\n\n";
+        cout << "Que quieres hacer pon el numero a continuacion: " << endl;
+        cout << "1 Borrar" << endl;
+        cout << "2 Añadir" << endl;
+        cout << "3 Buscar" << endl;
+        cout << "4 Mostrar" << endl;
         cout << "5 Modificar" << endl;
-        cout << "-1 Para salir" <<endl;
+        cout << "6 Leer" << endl;
+        cout << "7 Guardar" << endl;
+        cout << "-1 Para salir" << endl;
         cin >> numero_agenda;
         cout << endl;
-        if(numero_agenda == -1)
+        if (numero_agenda == -1)
             break;
-        else if(numero_agenda < 0 || numero_agenda > 5)
-            cout << "Te has confundido con el numero";
-        else if(numero_agenda == 1)
+        else if (numero_agenda == 1)
         {
             imprimir_elems(start);
-            cout << "Que id quieres borrar"<<endl;
+            cout << "Que id quieres borrar" << endl;
             cin >> id_main;
             delete_node(start, id_main);
         }
@@ -178,11 +268,11 @@ int main(){
         {
             int tele;
             string nombre;
-            cout << "nombre persona a añadir:"<< endl;
+            cout << "nombre persona a añadir:" << endl;
             cin >> nombre;
-            cout << "telefono persona a añadir:"<< endl;
+            cout << "telefono persona a añadir:" << endl;
             cin >> tele;
-            push(start,tele, nombre);
+            push(start, tele, nombre);
         }
         else if (numero_agenda == 4)
         {
@@ -191,21 +281,29 @@ int main(){
         else if (numero_agenda == 3)
         {
             string nombre;
-            cout << "nombre persona que buscas:"<< endl;
+            cout << "nombre persona que buscas:" << endl;
             cin >> nombre;
             search(start, nombre);
-
         }
         else if (numero_agenda == 5)
         {
             int numero;
             imprimir_elems(start, 1);
-            cout << "Que numero de la lista quieres modificar"<<endl;
+            cout << "Que numero de la lista quieres modificar" << endl;
             cin >> numero;
             modificar(start, numero);
-
         }
-
+        else if (numero_agenda == 6) // leer
+        {
+            start = leer();
+        }
+        else if (numero_agenda == 7) // guardar
+        {
+            if (guardar(start) == -1)
+                return -1;
+        }
+        else
+            cout << "Te has confundido con el numero";
     }
     // P_Node start = make_shared<Node>(Node{1, nullptr});
     // push(start,2);
@@ -218,7 +316,4 @@ int main(){
     // imprimir_recursivo(start);
     // //forEach(start, [](P_Node a){ cout << a->data << " ";});
     // cout << endl;
-
-
-
 }
