@@ -66,3 +66,5 @@ PNode find(PNode const &head, function<bool(Student const &)> const &f);
  *
  */
 PNode findLast(PNode const &head, function<bool(Student const &)> const &f);
+
+PNode delete_node(PNode &head, function<bool(Student const &)> const &f);

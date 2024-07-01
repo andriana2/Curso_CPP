@@ -49,7 +49,7 @@ istream &operator>>(istream &is, Student &s)
   string line;
   getline(is, line);
 
-  auto parts = splitInParenthesis(line); // {"name Alberto Valero", "subjects Progra I Progra 2 EDA"}
+  vector<string> parts = splitInParenthesis(line); // {"name Alberto Valero", "subjects Progra I Progra 2 EDA"}
 
   for (auto part : parts)
   {
