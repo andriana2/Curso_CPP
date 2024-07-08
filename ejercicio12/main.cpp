@@ -1,32 +1,48 @@
-#include <iostream>
-#include <string>
-#include <vector>
 #include "grafos.h"
-
-using namespace std;
 
 int main()
 {
-  Grafo grafo;
-  auto nodeA = make_shared<Node>('A', vector<vector<string>>{{"B", "2"}, {"C", "1"}}, 0);
-  auto nodeB = make_shared<Node>('B', vector<vector<string>>{{"E", "2"}}, INT8_MAX);
-  auto nodeC = make_shared<Node>('C', vector<vector<string>>{{"F", "3"}, {"E", "5"}}, INT8_MAX);
-  auto nodeD = make_shared<Node>('D', vector<vector<string>>{{"G", "5"}, {"B", "4"}}, INT8_MAX);
-  auto nodeE = make_shared<Node>('E', vector<vector<string>>{{"C", "7"}, {"F", "1"}}, INT8_MAX);
-  auto nodeF = make_shared<Node>('F', vector<vector<string>>{{"D", "2"}}, INT8_MAX);
-  auto nodeG = make_shared<Node>('G', nullptr, INT8_MAX);
+	// Create nodes with coordinates
+	auto nodeA = make_shared<Node>();
+	nodeA->data = {0, 0};
 
-  grafo.grafo_st.insert(nodeA);
-  grafo.grafo_st.insert(nodeB);
-  grafo.grafo_st.insert(nodeC);
+	auto nodeB = make_shared<Node>();
+	nodeB->data = {1, 2};
 
-  push(nodeA, nodeB, false);
-  push(nodeA, nodeC, false);
-  push(nodeB, nodeE, false);
-  push(nodeC, nodeF, false);
-  push(nodeC, nodeE);
-  push(nodeD, nodeG, false);
-  push(nodeD, nodeB, false);
-  push(nodeE, nodeF, false);
-  push(nodeF, nodeD, false);
+	auto nodeC = make_shared<Node>();
+	nodeC->data = {2, 3};
+
+	auto nodeD = make_shared<Node>();
+	nodeD->data = {3, 1};
+
+	// Connect nodes with edges
+	push(nodeA, nodeB);
+	push(nodeA, nodeC, false);
+	push(nodeB, nodeD, false);
+	push(nodeC, nodeD, false);
+
+	// List of all nodes
+	vector<shared_ptr<Node>> nodes = {nodeA, nodeB, nodeC, nodeD};
+
+	// Run Dijkstra's algorithm from nodeA
+	dijkstra(nodeA, nodes);
+
+	// Print the shortest path from nodeA to all other nodes
+		int a{64};
+	for (auto node : nodes)
+	{
+		cout << "Cost to reach node "<< (char)++a <<" (" << node->data.x << ", " << node->data.y << ") is " << node->cost << endl;
+		cout << "Path: ";
+		auto current = node;
+		while (current != nullptr)
+		{
+			cout << "(" << current->data.x << ", " << current->data.y << ")";
+			current = current->prev;
+			if (current != nullptr)
+				cout << " <- ";
+		}
+		cout << endl;
+	}
+
+	return 0;
 }

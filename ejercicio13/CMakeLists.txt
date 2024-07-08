@@ -4,7 +4,7 @@ project(Ejemplo)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(SOURCE main.cpp grafos.cpp)
+set(SOURCE complejos.cpp)
 
 add_executable(main ${SOURCE})
 
